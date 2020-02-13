@@ -322,6 +322,27 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 560858989804442310, guid: 2693fcdb9a45b0241b0279e3227c4087,
+        type: 3}
+      propertyPath: occupiedColor.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 560858989804442310, guid: 2693fcdb9a45b0241b0279e3227c4087,
+        type: 3}
+      propertyPath: occupiedColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 560858989804442310, guid: 2693fcdb9a45b0241b0279e3227c4087,
+        type: 3}
+      propertyPath: occupiedColor.b
+      value: 0.07363963
+      objectReference: {fileID: 0}
+    - target: {fileID: 560858989804442310, guid: 2693fcdb9a45b0241b0279e3227c4087,
+        type: 3}
+      propertyPath: shipPrefab_3
+      value: 
+      objectReference: {fileID: 7630813198292009681, guid: 6d732c4e4cdcfeb4f8e99ca587d06c81,
+        type: 3}
     - target: {fileID: 560858989804442311, guid: 2693fcdb9a45b0241b0279e3227c4087,
         type: 3}
       propertyPath: m_Name

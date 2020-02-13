@@ -5,28 +5,57 @@ using UnityEngine;
 public class TileScript : MonoBehaviour
 {
     public GridScript grid;
-    private Color defaultColor, highlightedColor;
+    private Color defaultColor, highlightedColor, occupiedColor;
+    private Vector2Int location;
+    private bool isOccupied;
 
     private void Start()
     {
         defaultColor = grid.defaultColor;
         highlightedColor = grid.highlightedColor;
+        occupiedColor = grid.occupiedColor;
+        isOccupied = false;
     }
 
-    public void Highlight()
+    public void SetLocation(Vector2Int loc)
     {
-        SetColor(highlightedColor);
-        CancelInvoke("ResetHighlight");
-        Invoke("ResetHighlight", 0.05f);
+        location = loc;
+    }
+
+    public Vector2Int GetLocation()
+    {
+        return location;
+    }
+
+    public void MouseOver()
+    {
+        if (!isOccupied)
+        {
+            SetColor(highlightedColor, false);
+            CancelInvoke("ResetHighlight");
+            Invoke("ResetHighlight", 0.05f);
+        }
     }
 
     private void ResetHighlight()
     {
-        SetColor(defaultColor);
+        if (!isOccupied)
+            SetColor(defaultColor, false);
     }
 
-    private void SetColor(Color c)
+    public void SetColor(Color c, bool o)
     {
+        isOccupied = o;
         GetComponent<MeshRenderer>().material.SetColor("_Color", c);
+    }
+
+    public Color GetColor()
+    {
+        return GetComponent<MeshRenderer>().material.GetColor("_Color");
+    }
+
+    public bool GetOccupied()
+    {
+        return isOccupied;
     }
 }
