@@ -1,12 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TileScript : MonoBehaviour
 {
+    public TextMesh attackFeedbackText;
+
     private Color defaultColor, highlightedColor, occupiedColor;
     private Vector2Int location;
     private bool isOccupied;
+    private bool hasShip;
+    private bool isAttacked;
     private GridScript grid;
 
     private void Start()
@@ -16,6 +21,9 @@ public class TileScript : MonoBehaviour
         highlightedColor = grid.highlightedColor;
         occupiedColor = grid.occupiedColor;
         isOccupied = false;
+        hasShip = false;
+        isAttacked = false;
+        attackFeedbackText.text = "";
     }
 
     public void SetLocation(Vector2Int loc)
@@ -63,5 +71,30 @@ public class TileScript : MonoBehaviour
     public GridScript GetGrid()
     {
         return grid;
+    }
+
+    public void SetHasShip(bool b)
+    {
+        hasShip = b;
+    }
+
+    public bool HasShip()
+    {
+        return hasShip;
+    }
+
+    public void SetIsAttacked(bool b)
+    {
+        isAttacked = b;
+    }
+
+    public void ShowText(string msg)
+    {
+        attackFeedbackText.text = msg;
+    }
+
+    public bool IsAttacked()
+    {
+        return isAttacked;
     }
 }

@@ -319,6 +319,11 @@ PrefabInstance:
       propertyPath: gridType
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 560858989804442310, guid: 2693fcdb9a45b0241b0279e3227c4087,
+        type: 3}
+      propertyPath: gameManager
+      value: 
+      objectReference: {fileID: 1521909117}
     - target: {fileID: 560858989804442311, guid: 2693fcdb9a45b0241b0279e3227c4087,
         type: 3}
       propertyPath: m_Name
@@ -598,6 +603,11 @@ PrefabInstance:
       propertyPath: gridType
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 560858989804442310, guid: 2693fcdb9a45b0241b0279e3227c4087,
+        type: 3}
+      propertyPath: gameManager
+      value: 
+      objectReference: {fileID: 1521909117}
     - target: {fileID: 560858989804442311, guid: 2693fcdb9a45b0241b0279e3227c4087,
         type: 3}
       propertyPath: m_Name
@@ -745,6 +755,11 @@ PrefabInstance:
       propertyPath: backgroundColor.b
       value: 0.3773585
       objectReference: {fileID: 0}
+    - target: {fileID: 560858989804442310, guid: 2693fcdb9a45b0241b0279e3227c4087,
+        type: 3}
+      propertyPath: gameManager
+      value: 
+      objectReference: {fileID: 1521909117}
     - target: {fileID: 560858989804442311, guid: 2693fcdb9a45b0241b0279e3227c4087,
         type: 3}
       propertyPath: m_Name
@@ -1041,6 +1056,11 @@ PrefabInstance:
       propertyPath: backgroundColor.b
       value: 0.3773585
       objectReference: {fileID: 0}
+    - target: {fileID: 560858989804442310, guid: 2693fcdb9a45b0241b0279e3227c4087,
+        type: 3}
+      propertyPath: gameManager
+      value: 
+      objectReference: {fileID: 1521909117}
     - target: {fileID: 560858989804442311, guid: 2693fcdb9a45b0241b0279e3227c4087,
         type: 3}
       propertyPath: m_Name

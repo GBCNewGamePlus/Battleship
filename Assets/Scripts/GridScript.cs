@@ -7,6 +7,7 @@ public enum GridType {Defense, Attack};
 
 public class GridScript : MonoBehaviour
 {
+    public GameManagerScript gameManager;
     public GridType gridType;
     public GameObject tilePrefab;
     public GameObject shipPrefab_3;
@@ -14,6 +15,7 @@ public class GridScript : MonoBehaviour
     public Color defaultColor;
     public Color highlightedColor;
     public Color occupiedColor;
+    public Color attackedColor;
     public int gridSizeX;
     public int gridSizeY;
     public float padding;
@@ -24,9 +26,11 @@ public class GridScript : MonoBehaviour
     private int totalShipCount = -1; // -1 means n/a
     private int shipCount = -1; // -1 means n/a
     private bool setupComplete;
+    private bool isActive;
     
     void Awake()
     {
+        isActive = false;
         grid = new GameObject[gridSizeX, gridSizeY];
         tileWidth = tilePrefab.transform.lossyScale.x;
         tileHeight = tilePrefab.transform.lossyScale.y;
@@ -121,6 +125,10 @@ public class GridScript : MonoBehaviour
                 }
             }
         }
+        else if (gridType == GridType.Attack && isActive)
+        {
+            grid[index.x, index.y].GetComponent<TileScript>().MouseOver();
+        }
     }
 
     public void SelectArea(Vector2Int index)
@@ -133,8 +141,11 @@ public class GridScript : MonoBehaviour
                 if (TileAvailable(index))
                 {
                     grid[index.x, index.y].GetComponent<TileScript>().SetColor(occupiedColor, true);
+                    grid[index.x, index.y].GetComponent<TileScript>().SetHasShip(true);
                     grid[index.x - 1, index.y].GetComponent<TileScript>().SetColor(occupiedColor, true);
+                    grid[index.x - 1, index.y].GetComponent<TileScript>().SetHasShip(true);
                     grid[index.x + 1, index.y].GetComponent<TileScript>().SetColor(occupiedColor, true);
+                    grid[index.x + 1, index.y].GetComponent<TileScript>().SetHasShip(true);
                     InstantiateSprite(index);
                     shipCount++;
                 }
@@ -145,8 +156,11 @@ public class GridScript : MonoBehaviour
                 if (TileAvailable(index))
                 {
                     grid[index.x, index.y].GetComponent<TileScript>().SetColor(occupiedColor, true);
+                    grid[index.x, index.y].GetComponent<TileScript>().SetHasShip(true);
                     grid[index.x, index.y + 1].GetComponent<TileScript>().SetColor(occupiedColor, true);
+                    grid[index.x, index.y + 1].GetComponent<TileScript>().SetHasShip(true);
                     grid[index.x, index.y - 1].GetComponent<TileScript>().SetColor(occupiedColor, true);
+                    grid[index.x, index.y - 1].GetComponent<TileScript>().SetHasShip(true);
                     InstantiateSprite(index);
                     shipCount++;
                 }
@@ -156,11 +170,62 @@ public class GridScript : MonoBehaviour
                 setupComplete = true;
             }
         }
+        else if (gridType == GridType.Attack && isActive)
+        {
+            grid[index.x, index.y].GetComponent<TileScript>().SetColor(attackedColor, true);
+            gameManager.AttackOpponent(index);
+        }
     }
 
     public bool SetupComplete()
     {
         return setupComplete;
+    }
+
+    public void SetIsActive(bool b)
+    {
+        isActive = b;
+    }
+
+    public bool GetIsActive()
+    {
+        return isActive;
+    }
+
+    public void AttackTile(Vector2Int loc)
+    {
+        TileScript thisTile = grid[loc.x, loc.y].GetComponent<TileScript>();
+        thisTile.SetColor(attackedColor, true);
+        thisTile.SetIsAttacked(true);
+        if (thisTile.HasShip())
+        {
+            gameManager.GiveAttackFeedback("HIT");
+        }
+        else
+        {
+            gameManager.GiveAttackFeedback("MISS");
+        }
+    }
+
+    public bool AllShipsDestroyed()
+    {
+        for (int i = 0; i < gridSizeX; i++)
+        {
+            for (int j = 0; j < gridSizeY; j++)
+            {
+                TileScript thisTile = grid[i, j].GetComponent<TileScript>();
+                if (thisTile.HasShip() && !thisTile.IsAttacked())
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public void ShowTileText(Vector2Int loc, string msg)
+    {
+        grid[loc.x, loc.y].GetComponent<TileScript>().ShowText(msg);
     }
 
     private bool TileAvailable(Vector2Int index)

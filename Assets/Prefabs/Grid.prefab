@@ -43,10 +43,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97fd49c3f58293e498eb6a8cb4aa67a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameManager: {fileID: 0}
+  gridType: 0
   tilePrefab: {fileID: 4153885042307683563, guid: 92f5c2a73b0bfa445a9b6c01f3636814,
     type: 3}
+  shipPrefab_3: {fileID: 0}
+  backgroundColor: {r: 0, g: 0, b: 0, a: 0}
   defaultColor: {r: 0.7924528, g: 0.7924528, b: 0.7924528, a: 0}
   highlightedColor: {r: 0.090067655, g: 0.8301887, b: 0.80060345, a: 0}
+  occupiedColor: {r: 0, g: 0, b: 0, a: 0}
+  attackedColor: {r: 0.8962264, g: 0.41274428, b: 0.10568706, a: 0}
   gridSizeX: 10
   gridSizeY: 10
   padding: 0.1
