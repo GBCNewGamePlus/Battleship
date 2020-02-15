@@ -4,13 +4,10 @@ using UnityEngine;
 
 public class InputScript : MonoBehaviour
 {
-    public GridScript grid;
-
     void Update()
     {
         MouseOver();
         MouseClick();
-        ToggleShipRotation();
     }
 
     void MouseOver()
@@ -22,7 +19,8 @@ public class InputScript : MonoBehaviour
             if (hit.transform.gameObject.tag == "Tile")
             {
                 TileScript thisTile = hit.transform.gameObject.GetComponent<TileScript>();
-                grid.HighlightArea(thisTile.GetLocation());
+                thisTile.GetGrid().HighlightArea(thisTile.GetLocation());
+                ToggleShipRotation(thisTile.GetGrid());
             }
         }
     }
@@ -38,17 +36,17 @@ public class InputScript : MonoBehaviour
                 if (hit.transform.gameObject.tag == "Tile")
                 {
                     TileScript thisTile = hit.transform.gameObject.GetComponent<TileScript>();
-                    grid.SelectArea(thisTile.GetLocation());
+                    thisTile.GetGrid().SelectArea(thisTile.GetLocation());
                 }
             }
         }
     }
 
-    void ToggleShipRotation()
+    void ToggleShipRotation(GridScript g)
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            grid.ToggleShipRotation();
+            g.ToggleShipRotation();
         }
     }
 }

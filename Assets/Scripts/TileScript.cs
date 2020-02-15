@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class TileScript : MonoBehaviour
 {
-    public GridScript grid;
     private Color defaultColor, highlightedColor, occupiedColor;
     private Vector2Int location;
     private bool isOccupied;
+    private GridScript grid;
 
     private void Start()
     {
+        grid = transform.parent.parent.GetComponent<GridScript>();
         defaultColor = grid.defaultColor;
         highlightedColor = grid.highlightedColor;
         occupiedColor = grid.occupiedColor;
@@ -57,5 +58,10 @@ public class TileScript : MonoBehaviour
     public bool GetOccupied()
     {
         return isOccupied;
+    }
+
+    public GridScript GetGrid()
+    {
+        return grid;
     }
 }

@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum ShipRotation {Vertical, Horizontal};
+public enum GridType {Defense, Attack};
 
 public class GridScript : MonoBehaviour
 {
+    public GridType gridType;
     public GameObject tilePrefab;
     public GameObject shipPrefab_3;
+    public Color backgroundColor;
     public Color defaultColor;
     public Color highlightedColor;
     public Color occupiedColor;
@@ -18,14 +21,23 @@ public class GridScript : MonoBehaviour
     private GameObject[,] grid;
     private float tileWidth, tileHeight;
     private ShipRotation currentRotation;
+    private int totalShipCount = -1; // -1 means n/a
+    private int shipCount = -1; // -1 means n/a
+    private bool setupComplete;
     
-    void Start()
+    void Awake()
     {
         grid = new GameObject[gridSizeX, gridSizeY];
         tileWidth = tilePrefab.transform.lossyScale.x;
         tileHeight = tilePrefab.transform.lossyScale.y;
         currentRotation = ShipRotation.Horizontal;
-        CenterGridParent();
+        if (gridType == GridType.Defense)
+        {
+            totalShipCount = 3;
+            shipCount = 0;
+        }
+        setupComplete = false;
+        //CenterGridParent();
         CreateGrid();
     }
     
@@ -62,6 +74,18 @@ public class GridScript : MonoBehaviour
                 grid[i, j] = thisTile;
             }
         }
+
+        Vector3 firstTilePos = grid[0, 0].transform.localPosition;
+        Vector3 centeringVector = new Vector3(gridSizeX * (tileWidth + padding)/2, -gridSizeY * (tileHeight + padding)/2, 0.5f);
+        Vector3 finalTouches = new Vector3(-tileWidth/2 - padding/2, tileHeight/2 + padding/2, 0);
+        Vector3 backgroundPos = firstTilePos + centeringVector + finalTouches;
+        Vector3 backgroundScale = new Vector3(gridSizeX * (tileWidth + padding) + padding/2, gridSizeY * (tileHeight + padding) + padding / 2, 1);
+        GameObject background = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        background.name = "Background";
+        background.transform.parent = gameObject.transform;
+        background.transform.position = backgroundPos;
+        background.transform.localScale = backgroundScale;
+        background.GetComponent<MeshRenderer>().material.SetColor("_Color", backgroundColor);
     }
 
     public void ToggleShipRotation()
@@ -74,52 +98,69 @@ public class GridScript : MonoBehaviour
 
     public void HighlightArea(Vector2Int index)
     {
-        if (currentRotation == ShipRotation.Horizontal)
+        if (gridType == GridType.Defense && !setupComplete)
         {
-            index.x = Mathf.Clamp(index.x, 1, gridSizeX - 2);
-            if (TileAvailable(index))
+            if (currentRotation == ShipRotation.Horizontal)
             {
-                grid[index.x, index.y].GetComponent<TileScript>().MouseOver();
-                grid[index.x - 1, index.y].GetComponent<TileScript>().MouseOver();
-                grid[index.x + 1, index.y].GetComponent<TileScript>().MouseOver();
+                index.x = Mathf.Clamp(index.x, 1, gridSizeX - 2);
+                if (TileAvailable(index))
+                {
+                    grid[index.x, index.y].GetComponent<TileScript>().MouseOver();
+                    grid[index.x - 1, index.y].GetComponent<TileScript>().MouseOver();
+                    grid[index.x + 1, index.y].GetComponent<TileScript>().MouseOver();
+                }
             }
-        }
-        else
-        {
-            index.y = Mathf.Clamp(index.y, 1, gridSizeY - 2);
-            if (TileAvailable(index))
+            else
             {
-                grid[index.x, index.y].GetComponent<TileScript>().MouseOver();
-                grid[index.x, index.y + 1].GetComponent<TileScript>().MouseOver();
-                grid[index.x, index.y - 1].GetComponent<TileScript>().MouseOver();
+                index.y = Mathf.Clamp(index.y, 1, gridSizeY - 2);
+                if (TileAvailable(index))
+                {
+                    grid[index.x, index.y].GetComponent<TileScript>().MouseOver();
+                    grid[index.x, index.y + 1].GetComponent<TileScript>().MouseOver();
+                    grid[index.x, index.y - 1].GetComponent<TileScript>().MouseOver();
+                }
             }
         }
     }
 
     public void SelectArea(Vector2Int index)
     {
-        if (currentRotation == ShipRotation.Horizontal)
+        if (gridType == GridType.Defense && !setupComplete)
         {
-            index.x = Mathf.Clamp(index.x, 1, gridSizeX - 2);
-            if (TileAvailable(index))
+            if (currentRotation == ShipRotation.Horizontal)
             {
-                grid[index.x, index.y].GetComponent<TileScript>().SetColor(occupiedColor, true);
-                grid[index.x - 1, index.y].GetComponent<TileScript>().SetColor(occupiedColor, true);
-                grid[index.x + 1, index.y].GetComponent<TileScript>().SetColor(occupiedColor, true);
-                InstantiateSprite(index);
+                index.x = Mathf.Clamp(index.x, 1, gridSizeX - 2);
+                if (TileAvailable(index))
+                {
+                    grid[index.x, index.y].GetComponent<TileScript>().SetColor(occupiedColor, true);
+                    grid[index.x - 1, index.y].GetComponent<TileScript>().SetColor(occupiedColor, true);
+                    grid[index.x + 1, index.y].GetComponent<TileScript>().SetColor(occupiedColor, true);
+                    InstantiateSprite(index);
+                    shipCount++;
+                }
+            }
+            else
+            {
+                index.y = Mathf.Clamp(index.y, 1, gridSizeY - 2);
+                if (TileAvailable(index))
+                {
+                    grid[index.x, index.y].GetComponent<TileScript>().SetColor(occupiedColor, true);
+                    grid[index.x, index.y + 1].GetComponent<TileScript>().SetColor(occupiedColor, true);
+                    grid[index.x, index.y - 1].GetComponent<TileScript>().SetColor(occupiedColor, true);
+                    InstantiateSprite(index);
+                    shipCount++;
+                }
+            }
+            if (shipCount >= totalShipCount)
+            {
+                setupComplete = true;
             }
         }
-        else
-        {
-            index.y = Mathf.Clamp(index.y, 1, gridSizeY - 2);
-            if (TileAvailable(index))
-            {
-                grid[index.x, index.y].GetComponent<TileScript>().SetColor(occupiedColor, true);
-                grid[index.x, index.y + 1].GetComponent<TileScript>().SetColor(occupiedColor, true);
-                grid[index.x, index.y - 1].GetComponent<TileScript>().SetColor(occupiedColor, true);
-                InstantiateSprite(index);
-            }
-        }
+    }
+
+    public bool SetupComplete()
+    {
+        return setupComplete;
     }
 
     private bool TileAvailable(Vector2Int index)
