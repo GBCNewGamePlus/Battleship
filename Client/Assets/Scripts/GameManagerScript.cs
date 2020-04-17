@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManagerScript : MonoBehaviour
 {
@@ -12,24 +13,53 @@ public class GameManagerScript : MonoBehaviour
     private string gameState;
     private string attackFeedback;
 
+    private bool timing = false;
+    public int timer = 30;
+    private Text timertxt;
     void Start()
     {
         gameState = "Setup";
         attackFeedback = "";
         Debug.Log("Welcome to Battleship!");
         Debug.Log("Please place your ships, both of you.");
+        timertxt = GameObject.Find("Timer").GetComponent<Text>();
+        timertxt.text = timer.ToString();
     }
     
     void Update()
     {
         if (gameState == "Setup")
             Setup();
+            
+        
     }
-
+    IEnumerator Timer()
+    {
+        timing = true;
+        while (timing)
+        {
+            timer--;
+            timertxt.text = timer.ToString();
+            if (timer <= 0)
+            {
+                timer = 30;
+                timing = false;
+                gameState = "Fumble";
+                StopCoroutine("Timer");
+            }
+            yield return new WaitForSeconds(1.0f);
+        }
+    }
     private void Setup()
     {
+        if (!timing)
+        {
+            StartCoroutine("Timer");
+        }
         if (player1Defense.SetupComplete() && player2Defense.SetupComplete())
         {
+            StopCoroutine("Timer");
+            timertxt.text = null;
             gameState = "Player1's Turn";
             player1Attack.SetIsActive(true);
             Debug.Log("Setup complete. It's Player 1's turn to attack.");
