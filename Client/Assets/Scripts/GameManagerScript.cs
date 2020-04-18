@@ -16,8 +16,9 @@ public class GameManagerScript : MonoBehaviour
     {
         gameState = "Setup";
         attackFeedback = "";
-        Debug.Log("Welcome to Battleship!");
-        Debug.Log("Please place your ships, both of you.");
+        
+        //Debug.Log("Welcome to Battleship!");
+        //Debug.Log("Please place your ships, both of you.");
     }
     
     void Update()

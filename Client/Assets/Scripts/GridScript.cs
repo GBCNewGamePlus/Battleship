@@ -230,6 +230,7 @@ public class GridScript : MonoBehaviour
 
     private bool TileAvailable(Vector2Int index)
     {
+        /*
         List<bool> conditions = new List<bool>();
         if (currentRotation == ShipRotation.Horizontal)
         {
@@ -247,7 +248,7 @@ public class GridScript : MonoBehaviour
         {
             if (c)
                 return false;
-        }
+        }*/
         return true;
     }
 
