@@ -15,13 +15,11 @@ public class WaitingManager : MonoBehaviour
     public string MatchupServer = "34.236.164.9";
     public int MatchupPort = 55443;
     public int ConnectionTimeout = 30;
-
+    private UdpClient udp;
     public GameObject Waiting;
     public GameObject RequestMatchBtn;
     public GameObject LogoutBtn;
     public GameObject WaitingLbl;
-    public UdpClient udp;
-    public UdpClient udp_debug;
     public Text WelcomeLbl;
     public Text WaitingLblText;
 
@@ -45,12 +43,6 @@ public class WaitingManager : MonoBehaviour
 
         StartCoroutine("WaitingForConnection" );
 
-        udp_debug = new UdpClient();
-        udp_debug.Connect(MatchupServer, MatchupPort);
-        Byte[] sendBytesDebug = Encoding.UTF8.GetBytes(userMatchString);
-        udp_debug.Send(sendBytesDebug, sendBytes.Length);
-        udp_debug.BeginReceive(new AsyncCallback(OnReceived_Debug), udp_debug);
-
         UIManager.State = 2;
     }
     void OnReceived(IAsyncResult result){
@@ -69,9 +61,11 @@ public class WaitingManager : MonoBehaviour
         UIManager.CurrentRival = new UserData(){
             user_id = match.opponent.user_id,
             score = match.opponent.score,
-            start = match.opponent.start
+            start = match.opponent.start,
+            boardSet = false
         };
         UIManager.CurrentUser.start = match.you.start;
+        UIManager.CurrentUser.boardSet = false;
         UIManager.State = 3;
         UIManager.ChangeState = true;
     }
@@ -84,21 +78,6 @@ public class WaitingManager : MonoBehaviour
             UIManager.State = 1;
         }
     }
-    void OnReceived_Debug(IAsyncResult result){
-        // this is what had been passed into BeginReceive as the second parameter:
-        UdpClient socket = result.AsyncState as UdpClient;
-        
-        // points towards whoever had sent the message:
-        IPEndPoint source = new IPEndPoint(0, 0);
-
-        // get the actual message and fill out the source:
-        byte[] message = socket.EndReceive(result, ref source);
-        
-        // do what you'd like with `message` here:
-        string returnData = Encoding.UTF8.GetString(message);
-        //udp_debug.Dispose();
-    }
-
     public void OnLogoutBtn(){
 
         StartCoroutine("PostLogout");

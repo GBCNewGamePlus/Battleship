@@ -39,6 +39,7 @@ public class GameManagerScript : MonoBehaviour
     {
         if (defense.SetupComplete())
         {
+            UIManager.CurrentUser.boardSet = true;
             if(UIManager.CurrentUser.start == "true"){
                 gameState = "Turn";
                 attack.SetIsActive(true);

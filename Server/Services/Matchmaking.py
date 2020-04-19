@@ -93,11 +93,13 @@ def generate_game(sock, client_one, client_two):
             'user_id': client_one['user_id'],
             'level': client_one['level'],
             'score': client_one['score'],
+            'start' :  'true'
         },
         'opponent': {
             'user_id': client_two['user_id'],
             'level': client_two['level'],
             'score': client_two['score'],
+            'start': 'false',
         },
         'game_id': game_id
     }
@@ -121,11 +123,13 @@ def generate_game(sock, client_one, client_two):
             'user_id': client_two['user_id'],
             'level': client_two['level'],
             'score': client_two['score'],
+            'start': 'false',
         },
         'opponent':  {
             'user_id': client_one['user_id'],
             'level': client_one['level'],
             'score': client_one['score'],
+            'start': 'true',
         },
         'game_id': game_id
     }
@@ -158,4 +162,5 @@ def main():
 if __name__ == '__main__':
     print('Starting operations')
     main()
+   
    

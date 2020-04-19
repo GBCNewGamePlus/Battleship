@@ -176,6 +176,7 @@ public class GridScript : MonoBehaviour
         else if (gridType == GridType.Attack && isActive)
         {
             grid[index.x, index.y].GetComponent<TileScript>().SetColor(attackedColor, true);
+            // Tells the server an attack happened
             gameManager.AttackOpponent(index);
         }
     }
