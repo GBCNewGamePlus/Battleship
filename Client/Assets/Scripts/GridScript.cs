@@ -24,12 +24,21 @@ public class GridScript : MonoBehaviour
     private float tileWidth, tileHeight;
     private ShipRotation currentRotation;
     private int totalShipCount = -1; // -1 means n/a
-    private int shipCount = -1; // -1 means n/a
+    public int shipCount = -1; // -1 means n/a
     private bool setupComplete;
     private bool isActive;
     
     void Awake()
     {
+    }
+
+    void Update()
+    {
+        
+    }
+
+
+    public void StartGame(int totalShip){
         isActive = false;
         grid = new GameObject[gridSizeX, gridSizeY];
         tileWidth = tilePrefab.transform.lossyScale.x;
@@ -37,19 +46,13 @@ public class GridScript : MonoBehaviour
         currentRotation = ShipRotation.Horizontal;
         if (gridType == GridType.Defense)
         {
-            totalShipCount = 3;
+            totalShipCount = totalShip;
             shipCount = 0;
         }
         setupComplete = false;
-        //CenterGridParent();
         CreateGrid();
     }
     
-    void Update()
-    {
-        
-    }
-
     private void CenterGridParent()
     {
         float newX = (tileWidth + padding) * gridSizeX / -2;

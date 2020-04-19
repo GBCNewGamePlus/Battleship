@@ -6,8 +6,10 @@ public class InputScript : MonoBehaviour
 {
     void Update()
     {
-        MouseOver();
-        MouseClick();
+        if(UIManager.State == 4){
+            MouseOver();
+            MouseClick();
+        }
     }
 
     void MouseOver()
@@ -16,6 +18,7 @@ public class InputScript : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out hit, 100.0f))
         {
+            Debug.Log("Tagging:"+ hit.transform.gameObject.tag);
             if (hit.transform.gameObject.tag == "Tile")
             {
                 TileScript thisTile = hit.transform.gameObject.GetComponent<TileScript>();

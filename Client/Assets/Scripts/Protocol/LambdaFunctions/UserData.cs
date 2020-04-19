@@ -10,4 +10,6 @@ public class UserData {
     public float total_matches;
     public string session_tk;
     public string login_date;
+    public string start;
+    public bool boardSet;
 }
