@@ -34,7 +34,13 @@ public class UIManager : MonoBehaviour
     public Text PlayerLbl;
     public Text OpponentLbl;
 
+    public LoginManager loginManager;
 
+    public void OnGoAgainBtn(){
+        CurrentRival = null;
+        loginManager.SimulateLogin();
+        State = 1;
+    }
     public GameManagerScript gameManager;
 
     IEnumerator MoveToGame(){
@@ -93,6 +99,12 @@ public class UIManager : MonoBehaviour
                 Foreplay.SetActive(false);
                 Waiting.SetActive(false);
                 Login.SetActive(false);
+                if(gameManager.gameState == "Win"){
+                    Win.SetActive(true);
+                }
+                else{
+                    Lose.SetActive(true);
+                }
                 break;
         }
     }

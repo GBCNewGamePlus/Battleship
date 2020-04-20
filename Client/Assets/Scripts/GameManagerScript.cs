@@ -20,7 +20,7 @@ public class GameManagerScript : MonoBehaviour
     public GridScript attack;
     private string attackedCoords;
     public string StatusText;
-    private string gameState = "Pregame";
+    public string gameState = "Pregame";
     private ReturnAttack latestAttackMessage;
     /*
      Pregame    - Shows login and join UI
@@ -66,6 +66,7 @@ public class GameManagerScript : MonoBehaviour
                     attack.SetIsActive(false);
                     StatusText="You won it!";
                     UIManager.State = 5;
+                    UpdatePlayerScore(true);
                 }
                 else{
                     if(currentAM.hit == "true"){
@@ -91,6 +92,7 @@ public class GameManagerScript : MonoBehaviour
                     attack.SetIsActive(false);
                     StatusText = "You Lost the game!";
                     UIManager.State = 5;
+                    UpdatePlayerScore(false);
                 }
                 else{
                     Debug.Log("Now it's your time to attack");
@@ -186,20 +188,6 @@ public class GameManagerScript : MonoBehaviour
                     Debug.Log("Receving Attack Data");
                     latestAttackMessage = JsonUtility.FromJson<ReturnAttack>(returnData);
                     break;
-                /*
-                case commands.OTHERS:
-                    lock(lockSpawn){
-                        spawnMessages.Enqueue(latestMessage);
-                    }
-                    break;
-                case commands.DELETE:
-                    lock(lockDelete){
-                        deleteMessages.Enqueue(latestMessage);
-                    }
-                    break;
-                default:
-                    Debug.Log("Error - no suitable message found!!!!!");
-                    break;*/
             }
         }
         catch (Exception e){
@@ -241,73 +229,39 @@ public class GameManagerScript : MonoBehaviour
         Debug.Log("Sending Attack!!");
         udp.Send(sendBytes, sendBytes.Length);
 
-        /*
-        if (gameState == "Player1's Turn")
-        {
-            player2Defense.AttackTile(loc);
-            if (player2Defense.AllShipsDestroyed())
-            {
-                attack.ShowTileText(loc, "H");
-                gameState = "Player1 Won";
-                player2Attack.SetIsActive(false);
-                attack.SetIsActive(false);
-                Debug.Log("Player1 hits and destroys the last ship of Player2.");
-                Debug.Log("Player1 won the game.");
-            }
-            else
-            {
-                gameState = "Player2's Turn";
-                attack.SetIsActive(false);
-                player2Attack.SetIsActive(true);
-                if (attackFeedback == "HIT")
-                {
-                    attack.ShowTileText(loc, "H");
-                    Debug.Log("Player1 hit a ship! It's Player2's turn to attack.");
-                }
-                else if (attackFeedback == "MISS")
-                {
-                    attack.ShowTileText(loc, "M");
-                    Debug.Log("Player1 missed. It's Player2's turn to attack.");
-                }
-                else
-                    Debug.Log("GameManager: ERROR");
-            }
-        }
-        else if (gameState == "Player2's Turn")
-        {
-            defense.AttackTile(loc);
-            if (defense.AllShipsDestroyed())
-            {
-                player2Attack.ShowTileText(loc, "H");
-                gameState = "Player2 Won";
-                player2Attack.SetIsActive(false);
-                attack.SetIsActive(false);
-                Debug.Log("Player2 hits and destroys the last ship of Player1.");
-                Debug.Log("Player2 won the game.");
-            }
-            else
-            {
-                gameState = "Player1's Turn";
-                player2Attack.SetIsActive(false);
-                attack.SetIsActive(true);
-                if (attackFeedback == "HIT")
-                {
-                    Debug.Log("Player2 hit a ship! It's Player1's turn to attack.");
-                    player2Attack.ShowTileText(loc, "H");
-                }
-                else if (attackFeedback == "MISS")
-                {
-                    Debug.Log("Player2 missed. It's Player1's turn to attack.");
-                    player2Attack.ShowTileText(loc, "M");
-                }
-                else
-                    Debug.Log("GameManager: ERROR");
-            }
-        } */
     }
 
-    public void GiveAttackFeedback(string msg)
-    {
-        //attackFeedback = msg;
+    ScoreUpdateRequest req = null;
+    private void UpdatePlayerScore(bool win){
+        float ratingDiff = UIManager.CurrentRival.score - UIManager.CurrentUser.score;
+        float den = 1 + (float)Math.Pow(10, ratingDiff/400);
+        float exp = 1.0f/den;
+        float ratingChange = win?1:0;
+        ratingChange = (ratingChange - exp) * 32;
+        req = new ScoreUpdateRequest(){
+            Username = UIManager.CurrentUser.user_id,
+            Score = ratingChange,
+            SessionToken = UIManager.CurrentUser.session_tk
+        };
+        StartCoroutine("PostScoreUpdate");
     }
+    public IEnumerator PostScoreUpdate(){
+
+        var postData = JsonUtility.ToJson(req);
+        using (UnityWebRequest www = UnityWebRequest.Put(URLBase + "BTUsrMgm", postData))
+        {
+            www.method = UnityWebRequest.kHttpVerbPOST;
+            www.SetRequestHeader("Content-Type", "application/json");
+            www.SetRequestHeader("Accept", "application/json");
+ 
+            yield return www.SendWebRequest();
+ 
+            if (www.isNetworkError)
+            {
+                Debug.Log(www.error);
+            }
+        }
+    }
+
+
 }

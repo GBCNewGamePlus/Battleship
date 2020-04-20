@@ -217,6 +217,7 @@ public class GridScript : MonoBehaviour
         TileScript thisTile = grid[loc.x, loc.y].GetComponent<TileScript>();
         thisTile.SetColor(attackedColor, true);
         thisTile.SetIsAttacked(true);
+        /*
         if (thisTile.HasShip())
         {
             gameManager.GiveAttackFeedback("HIT");
@@ -224,7 +225,7 @@ public class GridScript : MonoBehaviour
         else
         {
             gameManager.GiveAttackFeedback("MISS");
-        }
+        }*/
     }
 
     public bool AllShipsDestroyed()
