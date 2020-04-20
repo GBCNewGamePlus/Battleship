@@ -18,7 +18,6 @@ public class InputScript : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out hit, 100.0f))
         {
-            Debug.Log("Tagging:"+ hit.transform.gameObject.tag);
             if (hit.transform.gameObject.tag == "Tile")
             {
                 TileScript thisTile = hit.transform.gameObject.GetComponent<TileScript>();

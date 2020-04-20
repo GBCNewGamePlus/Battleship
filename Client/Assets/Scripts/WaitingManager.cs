@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Net.Sockets;
 using System.Net;
+using System.Net.Sockets;
 using System.Text;
 
 using UnityEngine;
@@ -35,14 +35,13 @@ public class WaitingManager : MonoBehaviour
         string userMatchString = JsonUtility.ToJson(userMatchData);
         Byte[] sendBytes = Encoding.UTF8.GetBytes(userMatchString);
 
-        Debug.Log("Connecting to the server");
+        Debug.Log("Connecting to the Matchmaking Server");
         udp = new UdpClient();
         udp.Connect(MatchupServer, MatchupPort);
         udp.Send(sendBytes, sendBytes.Length);
         udp.BeginReceive(new AsyncCallback(OnReceived), udp);
 
         StartCoroutine("WaitingForConnection" );
-
         UIManager.State = 2;
     }
     void OnReceived(IAsyncResult result){
@@ -64,6 +63,7 @@ public class WaitingManager : MonoBehaviour
             start = match.opponent.start,
             boardSet = false
         };
+        UIManager.GameId = match.game_id;
         UIManager.CurrentUser.start = match.you.start;
         UIManager.CurrentUser.boardSet = false;
         UIManager.State = 3;

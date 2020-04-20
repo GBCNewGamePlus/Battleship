@@ -16,7 +16,7 @@ public class UIManager : MonoBehaviour
     public GameObject Login;
     public static UserData CurrentUser = null;
     public static UserData CurrentRival = null;
-
+    public static string GameId;
     // Waiting Screen
     public GameObject Waiting;
     public GameObject RequestMatchBtn;

@@ -496,7 +496,9 @@ MonoBehaviour:
   PlayHUD: {fileID: 63179581}
   Win: {fileID: 737240852}
   Lose: {fileID: 1136332772}
-  Timer: {fileID: 2039207096}
+  TimerLbl: {fileID: 2039207096}
+  PlayerLbl: {fileID: 894010642}
+  OpponentLbl: {fileID: 1175450349}
   gameManager: {fileID: 1521909117}
 --- !u!1 &132685898
 GameObject:
@@ -3444,10 +3446,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4d40400b0d2ffc4ab5a63975b8174f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  URLBase: https://zfum6anmbl.execute-api.us-east-1.amazonaws.com/default/
+  MatchupServer: 34.236.164.9
+  MatchupPort: 55443
+  ConnectionTimeout: 30
   defense: {fileID: 1144329281}
   attack: {fileID: 1315641460}
-  timer: 30
-  timerLbl: {fileID: 2039207096}
+  StatusText: 
 --- !u!4 &1521909118
 Transform:
   m_ObjectHideFlags: 0

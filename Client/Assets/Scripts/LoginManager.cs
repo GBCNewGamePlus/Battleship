@@ -91,14 +91,14 @@ public class LoginManager : MonoBehaviour
         else{
             UIManager.CurrentUser = JsonUtility.FromJson<UserData>(returnString);
             UIManager.State = 1;
+            WelcomeLbl.text = 
+                "Hi, " + UIManager.CurrentUser.user_id + " \n\n " + 
+                " Score: " + Math.Floor(UIManager.CurrentUser.score) +
+                " Wins: " + UIManager.CurrentUser.wins + 
+                " Losses: " + UIManager.CurrentUser.losses;
+            ErrorLbl.text = string.Empty;
         }
         UsernameTxt.text = string.Empty;
         PasswordTxt.text = string.Empty;
-        ErrorLbl.text = string.Empty;
-        WelcomeLbl.text = 
-            "Hi, " + UIManager.CurrentUser.user_id + " \n\n " + 
-            " Score: " + Math.Floor(UIManager.CurrentUser.score) +
-            " Wins: " + UIManager.CurrentUser.wins + 
-            " Losses: " + UIManager.CurrentUser.losses;
     }
 }

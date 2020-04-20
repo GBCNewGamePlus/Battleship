@@ -19,6 +19,8 @@ public class GridScript : MonoBehaviour
     public int gridSizeX;
     public int gridSizeY;
     public float padding;
+    public string OccupiedCells;
+    public int OccupiedNumber;
 
     private GameObject[,] grid;
     private float tileWidth, tileHeight;
@@ -39,6 +41,8 @@ public class GridScript : MonoBehaviour
 
 
     public void StartGame(int totalShip){
+        OccupiedCells = string.Empty;
+        OccupiedNumber = 0;
         isActive = false;
         grid = new GameObject[gridSizeX, gridSizeY];
         tileWidth = tilePrefab.transform.lossyScale.x;
@@ -145,10 +149,16 @@ public class GridScript : MonoBehaviour
                 {
                     grid[index.x, index.y].GetComponent<TileScript>().SetColor(occupiedColor, true);
                     grid[index.x, index.y].GetComponent<TileScript>().SetHasShip(true);
+                    OccupiedCells += "[" + index.x + "," + index.y + "]";
+                    OccupiedNumber++;
                     grid[index.x - 1, index.y].GetComponent<TileScript>().SetColor(occupiedColor, true);
                     grid[index.x - 1, index.y].GetComponent<TileScript>().SetHasShip(true);
+                    OccupiedCells += "[" + (index.x - 1) + "," + index.y + "]";
+                    OccupiedNumber++;
                     grid[index.x + 1, index.y].GetComponent<TileScript>().SetColor(occupiedColor, true);
                     grid[index.x + 1, index.y].GetComponent<TileScript>().SetHasShip(true);
+                    OccupiedCells += "[" + (index.x + 1) + "," + index.y + "]";
+                    OccupiedNumber++;
                     InstantiateSprite(index);
                     shipCount++;
                 }
@@ -160,10 +170,16 @@ public class GridScript : MonoBehaviour
                 {
                     grid[index.x, index.y].GetComponent<TileScript>().SetColor(occupiedColor, true);
                     grid[index.x, index.y].GetComponent<TileScript>().SetHasShip(true);
+                    OccupiedCells += "[" + index.x + "," + index.y + "]";
+                    OccupiedNumber++;
                     grid[index.x, index.y + 1].GetComponent<TileScript>().SetColor(occupiedColor, true);
                     grid[index.x, index.y + 1].GetComponent<TileScript>().SetHasShip(true);
+                    OccupiedCells += "[" + index.x + "," + (index.y + 1) + "]";
+                    OccupiedNumber++;
                     grid[index.x, index.y - 1].GetComponent<TileScript>().SetColor(occupiedColor, true);
                     grid[index.x, index.y - 1].GetComponent<TileScript>().SetHasShip(true);
+                    OccupiedCells += "[" + index.x + "," + (index.y - 1) + "]";
+                    OccupiedNumber++;
                     InstantiateSprite(index);
                     shipCount++;
                 }
