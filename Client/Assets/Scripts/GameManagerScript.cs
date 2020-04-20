@@ -64,6 +64,8 @@ public class GameManagerScript : MonoBehaviour
                     attack.ShowTileText(loc, "H");
                     gameState = "Win";
                     attack.SetIsActive(false);
+                    StatusText="You won it!";
+                    UIManager.State = 5;
                 }
                 else{
                     if(currentAM.hit == "true"){
@@ -87,6 +89,8 @@ public class GameManagerScript : MonoBehaviour
                     Debug.Log("you lost the game!");
                     gameState = "Lost";
                     attack.SetIsActive(false);
+                    StatusText = "You Lost the game!";
+                    UIManager.State = 5;
                 }
                 else{
                     Debug.Log("Now it's your time to attack");
