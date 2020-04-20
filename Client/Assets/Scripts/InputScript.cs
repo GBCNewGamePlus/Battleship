@@ -6,8 +6,10 @@ public class InputScript : MonoBehaviour
 {
     void Update()
     {
-        MouseOver();
-        MouseClick();
+        if(UIManager.State == 4){
+            MouseOver();
+            MouseClick();
+        }
     }
 
     void MouseOver()

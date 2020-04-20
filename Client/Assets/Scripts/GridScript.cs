@@ -19,17 +19,33 @@ public class GridScript : MonoBehaviour
     public int gridSizeX;
     public int gridSizeY;
     public float padding;
+    public string OccupiedCells;
+    public int OccupiedNumber;
 
     private GameObject[,] grid;
     private float tileWidth, tileHeight;
     private ShipRotation currentRotation;
     private int totalShipCount = -1; // -1 means n/a
-    private int shipCount = -1; // -1 means n/a
+    public int shipCount = -1; // -1 means n/a
     private bool setupComplete;
     private bool isActive;
+
+    private List<GameObject> ships;
     
     void Awake()
     {
+    }
+
+    void Update()
+    {
+        
+    }
+
+
+    public void StartGame(int totalShip){
+        OccupiedCells = string.Empty;
+        ships = new List<GameObject>();
+        OccupiedNumber = 0;
         isActive = false;
         grid = new GameObject[gridSizeX, gridSizeY];
         tileWidth = tilePrefab.transform.lossyScale.x;
@@ -37,19 +53,13 @@ public class GridScript : MonoBehaviour
         currentRotation = ShipRotation.Horizontal;
         if (gridType == GridType.Defense)
         {
-            totalShipCount = 3;
+            totalShipCount = totalShip;
             shipCount = 0;
         }
         setupComplete = false;
-        //CenterGridParent();
         CreateGrid();
     }
     
-    void Update()
-    {
-        
-    }
-
     private void CenterGridParent()
     {
         float newX = (tileWidth + padding) * gridSizeX / -2;
@@ -142,10 +152,16 @@ public class GridScript : MonoBehaviour
                 {
                     grid[index.x, index.y].GetComponent<TileScript>().SetColor(occupiedColor, true);
                     grid[index.x, index.y].GetComponent<TileScript>().SetHasShip(true);
+                    OccupiedCells += "[" + index.x + "," + index.y + "]";
+                    OccupiedNumber++;
                     grid[index.x - 1, index.y].GetComponent<TileScript>().SetColor(occupiedColor, true);
                     grid[index.x - 1, index.y].GetComponent<TileScript>().SetHasShip(true);
+                    OccupiedCells += "[" + (index.x - 1) + "," + index.y + "]";
+                    OccupiedNumber++;
                     grid[index.x + 1, index.y].GetComponent<TileScript>().SetColor(occupiedColor, true);
                     grid[index.x + 1, index.y].GetComponent<TileScript>().SetHasShip(true);
+                    OccupiedCells += "[" + (index.x + 1) + "," + index.y + "]";
+                    OccupiedNumber++;
                     InstantiateSprite(index);
                     shipCount++;
                 }
@@ -157,10 +173,16 @@ public class GridScript : MonoBehaviour
                 {
                     grid[index.x, index.y].GetComponent<TileScript>().SetColor(occupiedColor, true);
                     grid[index.x, index.y].GetComponent<TileScript>().SetHasShip(true);
+                    OccupiedCells += "[" + index.x + "," + index.y + "]";
+                    OccupiedNumber++;
                     grid[index.x, index.y + 1].GetComponent<TileScript>().SetColor(occupiedColor, true);
                     grid[index.x, index.y + 1].GetComponent<TileScript>().SetHasShip(true);
+                    OccupiedCells += "[" + index.x + "," + (index.y + 1) + "]";
+                    OccupiedNumber++;
                     grid[index.x, index.y - 1].GetComponent<TileScript>().SetColor(occupiedColor, true);
                     grid[index.x, index.y - 1].GetComponent<TileScript>().SetHasShip(true);
+                    OccupiedCells += "[" + index.x + "," + (index.y - 1) + "]";
+                    OccupiedNumber++;
                     InstantiateSprite(index);
                     shipCount++;
                 }
@@ -173,6 +195,7 @@ public class GridScript : MonoBehaviour
         else if (gridType == GridType.Attack && isActive)
         {
             grid[index.x, index.y].GetComponent<TileScript>().SetColor(attackedColor, true);
+            // Tells the server an attack happened
             gameManager.AttackOpponent(index);
         }
     }
@@ -197,6 +220,7 @@ public class GridScript : MonoBehaviour
         TileScript thisTile = grid[loc.x, loc.y].GetComponent<TileScript>();
         thisTile.SetColor(attackedColor, true);
         thisTile.SetIsAttacked(true);
+        /*
         if (thisTile.HasShip())
         {
             gameManager.GiveAttackFeedback("HIT");
@@ -204,7 +228,7 @@ public class GridScript : MonoBehaviour
         else
         {
             gameManager.GiveAttackFeedback("MISS");
-        }
+        }*/
     }
 
     public bool AllShipsDestroyed()
@@ -263,5 +287,22 @@ public class GridScript : MonoBehaviour
         GameObject thisShip = Instantiate(shipPrefab_3, spritePos, spriteRot);
         thisShip.name = "Ship_3";
         thisShip.transform.parent = gameObject.transform;
+        ships.Add(thisShip);
+    }
+    public void EndGame(){
+        foreach (var sh in ships){
+            Destroy(sh);
+        }
+        for (int i = 0; i < gridSizeX; i++)
+        {
+            string rowName = "Row " + i;
+            for (int j = 0; j < gridSizeY; j++)
+            {
+                Destroy(grid[i, j]);
+            }
+            GameObject currentRow = GameObject.Find(rowName);
+            Destroy(currentRow);
+        }
+
     }
 }
