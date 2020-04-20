@@ -233,6 +233,8 @@ public class GameManagerScript : MonoBehaviour
 
     ScoreUpdateRequest req = null;
     private void UpdatePlayerScore(bool win){
+        attack.EndGame();
+        defense.EndGame();
         float ratingDiff = UIManager.CurrentRival.score - UIManager.CurrentUser.score;
         float den = 1 + (float)Math.Pow(10, ratingDiff/400);
         float exp = 1.0f/den;

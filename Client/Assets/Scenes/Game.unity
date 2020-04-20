@@ -486,6 +486,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e85bc311e44eec42bc2751cbd699930, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  URLBase: https://zfum6anmbl.execute-api.us-east-1.amazonaws.com/default/
   Foreplay: {fileID: 2063618915}
   Login: {fileID: 1763063838}
   Waiting: {fileID: 279829187}
@@ -499,6 +500,7 @@ MonoBehaviour:
   TimerLbl: {fileID: 2039207096}
   PlayerLbl: {fileID: 894010642}
   OpponentLbl: {fileID: 1175450349}
+  WelcomeLbl: {fileID: 438806527}
   loginManager: {fileID: 1763063842}
   gameManager: {fileID: 1521909117}
 --- !u!1 &132685898

@@ -24,11 +24,6 @@ public class LoginManager : MonoBehaviour
         ErrorLbl.text = string.Empty;
         StartCoroutine("PostRegister");
     }
-    public void SimulateLogin(){
-        UsernameTxt.text = UIManager.CurrentUser.user_id;
-        PasswordTxt.text = UIManager.CurrentUser.password;
-        StartCoroutine("PostRegister");
-    }
     public IEnumerator PostRegister(){
         var requestBody = new LoginRequest(){
             Username = UsernameTxt.text.Trim(),

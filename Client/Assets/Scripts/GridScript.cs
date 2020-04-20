@@ -29,6 +29,8 @@ public class GridScript : MonoBehaviour
     public int shipCount = -1; // -1 means n/a
     private bool setupComplete;
     private bool isActive;
+
+    private List<GameObject> ships;
     
     void Awake()
     {
@@ -42,6 +44,7 @@ public class GridScript : MonoBehaviour
 
     public void StartGame(int totalShip){
         OccupiedCells = string.Empty;
+        ships = new List<GameObject>();
         OccupiedNumber = 0;
         isActive = false;
         grid = new GameObject[gridSizeX, gridSizeY];
@@ -251,7 +254,6 @@ public class GridScript : MonoBehaviour
 
     private bool TileAvailable(Vector2Int index)
     {
-        /*
         List<bool> conditions = new List<bool>();
         if (currentRotation == ShipRotation.Horizontal)
         {
@@ -269,7 +271,7 @@ public class GridScript : MonoBehaviour
         {
             if (c)
                 return false;
-        }*/
+        }
         return true;
     }
 
@@ -285,5 +287,22 @@ public class GridScript : MonoBehaviour
         GameObject thisShip = Instantiate(shipPrefab_3, spritePos, spriteRot);
         thisShip.name = "Ship_3";
         thisShip.transform.parent = gameObject.transform;
+        ships.Add(thisShip);
+    }
+    public void EndGame(){
+        foreach (var sh in ships){
+            Destroy(sh);
+        }
+        for (int i = 0; i < gridSizeX; i++)
+        {
+            string rowName = "Row " + i;
+            for (int j = 0; j < gridSizeY; j++)
+            {
+                Destroy(grid[i, j]);
+            }
+            GameObject currentRow = GameObject.Find(rowName);
+            Destroy(currentRow);
+        }
+
     }
 }

@@ -11,6 +11,7 @@ using UnityEngine.Networking;
 
 public class UIManager : MonoBehaviour
 {
+    public string URLBase = "https://zfum6anmbl.execute-api.us-east-1.amazonaws.com/default/";
     // Login/Register Screen
     public GameObject Foreplay;
     public GameObject Login;
@@ -34,13 +35,39 @@ public class UIManager : MonoBehaviour
     public Text PlayerLbl;
     public Text OpponentLbl;
 
+    public Text WelcomeLbl;
+
     public LoginManager loginManager;
 
     public void OnGoAgainBtn(){
         CurrentRival = null;
-        loginManager.SimulateLogin();
-        State = 1;
+        StartCoroutine("RefreshUserData");
     }
+
+    public IEnumerator RefreshUserData(){
+        using (UnityWebRequest www = UnityWebRequest.Get(URLBase + "BTUsrMgm?Username=" + UIManager.CurrentUser.user_id))
+        {
+            www.method = UnityWebRequest.kHttpVerbGET;
+            www.SetRequestHeader("Content-Type", "application/json");
+            www.SetRequestHeader("Accept", "application/json");
+ 
+            yield return www.SendWebRequest();
+            if (!www.isNetworkError)
+            {
+                var playerData = JsonUtility.FromJson<UserData>(www.downloadHandler.text);
+                CurrentUser = playerData;
+                State = 1;
+                WelcomeLbl.text = 
+                    "Hi, " + UIManager.CurrentUser.user_id + " \n\n " + 
+                    " Score: " + Math.Floor(UIManager.CurrentUser.score) +
+                    " Wins: " + UIManager.CurrentUser.wins + 
+                    " Losses: " + UIManager.CurrentUser.losses;
+            }
+ 
+        }
+
+    }
+
     public GameManagerScript gameManager;
 
     IEnumerator MoveToGame(){
@@ -88,6 +115,8 @@ public class UIManager : MonoBehaviour
                 }
                 break;
             case 4: // Playing the game
+                Win.SetActive(false);
+                Lose.SetActive(false);
                 PlayHUD.SetActive(true);
                 Foreplay.SetActive(false);
                 Waiting.SetActive(false);
